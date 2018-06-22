@@ -7,7 +7,7 @@ require "vendor/autoload.php";
 use Abraham\TwitterOAuth\TwitterOAuth;
 
 
-$oPDO = new PDO('mysql:host='.$aConfig["MYSQL"]["host"].';dbname='.$aConfig["MYSQL"]["db"], $aConfig["MYSQL"]["username"], $aConfig["MYSQL"]["password"]);
+$oPDO = new PDO('mysql:host='.$aConfig["MYSQL"]["host"].';dbname='.$aConfig["MYSQL"]["db"], $aConfig["MYSQL"]["user"], $aConfig["MYSQL"]["password"]);
 
 $sQuery = "SELECT fm.fm_id, fm.fm_text FROM f_full_messages fm WHERE fm.fm_valid = 1 AND fm.fm_delivred IS NULL ORDER BY rand() LIMIT 1";
 $sUpdate = "UPDATE f_full_messages fm SET fm.fm_delivred = NOW() WHER fm.fm_id = :fm_id";
@@ -32,8 +32,8 @@ if(!empty($aMessage)){
 
     $oPostedStatus = $oConnection->post("statuses/update", ["status" => $sTweet]);
     if ($oConnection->getLastHttpCode() == 200) {
-        echo "Success!";
+        echo "Success!\n";
     } else {
-        echo "Distribution error !";
+        echo "Distribution error !\n";
     }
 }
