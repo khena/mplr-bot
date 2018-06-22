@@ -12,10 +12,7 @@ $oPDO = new PDO('mysql:host='.$aConfig["MYSQL"]["host"].';dbname='.$aConfig["MYS
 $sQuery = "SELECT fm.fm_id, fm.fm_text FROM f_full_messages fm WHERE fm.fm_valid = 1 AND fm.fm_delivred IS NULL ORDER BY rand() LIMIT 1";
 $sUpdate = "UPDATE f_full_messages fm SET fm.fm_delivred = NOW() WHER fm.fm_id = :fm_id";
 
-$oQuery = $oPDO->prepare($sQuery);
-$oQuery->execute();
-$aMessage = $oQuery->fetch();
-$oQuery->closeCursor();
+$aMessage = $oPDO->query($sQuery);
 
 if(!empty($aMessage)){
 
