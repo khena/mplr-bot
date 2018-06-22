@@ -1,0 +1,7 @@
+CREATE TABLE f_full_messages(
+  fm_id INTEGER(8) NOT NULL AUTO_INCREMENT,
+  fm_text VARCHAR(280) NOT NULL,
+  fm_valid TINYINT(1) NOT NULL DEFAULT 0,
+  fm_delivred DATETIME DEFAULT NULL,
+  PRIMARY KEY(fm_id)
+);
