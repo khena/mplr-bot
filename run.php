@@ -6,15 +6,19 @@ require "vendor/autoload.php";
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 
+$sQuery = "SELECT fm.fm_id, fm.fm_text FROM f_full_messages fm WHERE fm.fm_valid = 1 AND fm.fm_delivred IS NULL ORDER BY rand() LIMIT 1";
+$sUpdate = "UPDATE f_full_messages fm SET fm.fm_delivred = NOW() WHERE fm.fm_id = :fm_id";
+
 try{
-    $oPDO = new PDO('mysql:host='.$aConfig["MYSQL"]["host"].';dbname='.$aConfig["MYSQL"]["db"], $aConfig["MYSQL"]["user"], $aConfig["MYSQL"]["password"]);
-    $aMessage = $oPDO->query($sQuery);
+    $oPDO = new PDO('mysql:host='.$aConfig["MYSQL"]["host"].';dbname='.$aConfig["MYSQL"]["database"].';charset=utf8', $aConfig["MYSQL"]["user"], $aConfig["MYSQL"]["password"]);
+    $oQuery = $oPDO->prepare($sQuery);
+    $oQuery->execute();
+    $aMessage = $oQuery->fetch();
+    $oQuery->closeCursor();
 } catch (PDOException $e) {
     $aMessage = false;
     echo 'Connection fail : ' . $e->getMessage();
 }
-$sQuery = "SELECT fm.fm_id, fm.fm_text FROM f_full_messages fm WHERE fm.fm_valid = 1 AND fm.fm_delivred IS NULL ORDER BY rand() LIMIT 1";
-$sUpdate = "UPDATE f_full_messages fm SET fm.fm_delivred = NOW() WHER fm.fm_id = :fm_id";
 
 if(!empty($aMessage)){
 
@@ -28,7 +32,7 @@ if(!empty($aMessage)){
     $oUpdate->closeCursor();
 
     $oConnection = new TwitterOAuth($aConfig["TWITTER"]["consumer_key"], $aConfig["TWITTER"]["consumer_secret"], $aConfig["TWITTER"]["access_token"], $aConfig["TWITTER"]["access_token_secret"]);
-    $oConnectionInfo = $connection->get("account/verify_credentials");
+    $oConnectionInfo = $oConnection->get("account/verify_credentials");
 
     $oPostedStatus = $oConnection->post("statuses/update", ["status" => $sTweet]);
     if ($oConnection->getLastHttpCode() == 200) {
