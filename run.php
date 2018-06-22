@@ -19,11 +19,12 @@ $oQuery->closeCursor();
 
 if(!empty($aMessage)){
 
-    $iFm_ID = $aMessage("fm_id");
-    $sTweet = $aMessage("fm_text");
+
+    $iFm_ID = $aMessage["fm_id"];
+    $sTweet = $aMessage["fm_text"];
 
     $oUpdate = $oPDO->prepare($sUpdate);
-    $oUpdate->bindParam(":fm_id",$iFm_ID);
+    $oUpdate->bindParam("fm_id",$iFm_ID);
     $oUpdate->execute();
     $oUpdate->closeCursor();
 
@@ -36,4 +37,6 @@ if(!empty($aMessage)){
     } else {
         echo "Distribution error !\n";
     }
+}else{
+    echo "Nothing to send :(\n";
 }
